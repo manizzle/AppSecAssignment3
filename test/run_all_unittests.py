@@ -1,6 +1,12 @@
 import unittest
 import requests
 import re
+import sys
+import os.path
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+import app
+import _thread
 
 class TestStringMethods(unittest.TestCase):
 
@@ -21,5 +27,8 @@ class TestStringMethods(unittest.TestCase):
         resp = requests.post("http://localhost:8081/spell_check", data={"inputtext": "somestuff"}).content
         self.assertTrue("2-Factor Phonenumber:" in resp.decode("utf-8"))
 
+
+
 if __name__ == '__main__':
+    _thread.start_new_thread(app.app.run, ("0.0.0.0", 8081, False),)
     unittest.main()
