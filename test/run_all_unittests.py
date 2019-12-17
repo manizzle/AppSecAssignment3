@@ -7,6 +7,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 import app
 import _thread
+import time
 
 class TestStringMethods(unittest.TestCase):
 
@@ -27,8 +28,12 @@ class TestStringMethods(unittest.TestCase):
         resp = requests.post("http://localhost:8081/spell_check", data={"inputtext": "somestuff"}).content
         self.assertTrue("2-Factor Phonenumber:" in resp.decode("utf-8"))
 
-
+    def test_adminflow(self):
+        session = requests.Session()
+        resp = session.post("http://localhost:8081/login", data={"uname": "admin", "pword": "Administrator@1", "2fa": "12345678901"}).content
+        self.assertTrue("success" in resp.decode("utf-8"))
 
 if __name__ == '__main__':
     _thread.start_new_thread(app.app.run, ("0.0.0.0", 8081, False),)
+    time.sleep(10)
     unittest.main()
